@@ -1,102 +1,108 @@
-import { expect, describe, it, beforeEach } from "vitest";
-import { createElement } from "../src/dom";
-
+import { expect, describe, it, beforeEach } from 'vitest';
+import { createElement } from '../src/dom';
+import { signal } from '../src/reactivity';
 const body = document.body;
 
-describe("dom", () => {
-  beforeEach(() => {
-    body.innerHTML = "";
-  });
+describe('dom', () => {
+	beforeEach(() => {
+		body.innerHTML = '';
+	});
 
-  it.skip("create an element", () => {
-    const element = createElement("div");
-    body.appendChild(element);
+	it('create an element', () => {
+		const element = createElement('div');
+		body.appendChild(element);
 
-    expect(body.innerHTML).toEqual("<div></div>");
-  });
+		expect(body.innerHTML).toEqual('<div></div>');
+	});
 
-  it.skip("create a div element with a single text child", () => {
-    const element = createElement("div", { children: "ciao" });
-    body.appendChild(element);
+	it('create a div element with a single text child', () => {
+		const element = createElement('div', { children: 'ciao' });
+		body.appendChild(element);
 
-    expect(body.innerHTML).toEqual("<div>ciao</div>");
-  });
+		expect(body.innerHTML).toEqual('<div>ciao</div>');
+	});
 
-  it.skip("create a div element with a single reactive text child", () => {
-    const [count, setCount] = signal(10);
+	it('create a div element with a single reactive text child', () => {
+		const [count, setCount] = signal(10);
 
-    const element = createElement("div", { children: () => `Size: ${count()}px` });
-    body.appendChild(element);
+		const element = createElement('div', {
+			children: () => `Size: ${count()}px`,
+		});
+		body.appendChild(element);
 
-    expect(body.innerHTML).toEqual("<div>Size: 10px</div>");
-    setCount(20);
-    expect(body.innerHTML).toEqual("<div>Size: 20px</div>");
-  });
+		expect(body.innerHTML).toEqual('<div>Size: 10px</div>');
+		setCount(20);
+		expect(body.innerHTML).toEqual('<div>Size: 20px</div>');
+	});
 
-  // TODO
-  //  see: examples/02_counter/index.js
-  //  run: npm run start:counter
+	// TODO
+	//  see: examples/02_counter/index.js
+	//  run: npm run start:counter
 
-  it.skip("create a div element with a single element as a child", () => {
-    const child = createElement("span", { children: "child" });
-    const element = createElement("div", { children: child });
+	it('create a div element with a single element as a child', () => {
+		const child = createElement('span', { children: 'child' });
+		const element = createElement('div', { children: child });
 
-    body.appendChild(element);
-    expect(body.innerHTML).toEqual("<div><span>child</span></div>");
-  });
+		body.appendChild(element);
+		expect(body.innerHTML).toEqual('<div><span>child</span></div>');
+	});
 
-  it.skip("create a div element with multiple different children", () => {
-    const [count, setCount] = signal(10);
-    const child = createElement("strong", { children: "count" });
+	it('create a div element with multiple different children', () => {
+		const [count, setCount] = signal(10);
+		const child = createElement('strong', { children: 'count' });
 
-    const element = createElement("div", { children: [child, " is ", count, null] });
+		const element = createElement('div', {
+			children: [child, ' is ', count, null],
+		});
 
-    body.appendChild(element);
-    expect(body.innerHTML).toEqual("<div><strong>count</strong> is 10</div>");
-    setCount(20);
-    expect(body.innerHTML).toEqual("<div><strong>count</strong> is 20</div>");
-  });
+		body.appendChild(element);
+		expect(body.innerHTML).toEqual('<div><strong>count</strong> is 10</div>');
+		setCount(20);
+		expect(body.innerHTML).toEqual('<div><strong>count</strong> is 20</div>');
+	});
 
-  it.skip("create an element using a custom element as tag", () => {
-    function CustomElement({ tag }) {
-      return createElement(tag, { children: "custom" });
-    }
+	it.skip('create an element using a custom element as tag', () => {
+		function CustomElement({ tag }) {
+			return createElement(tag, { children: 'custom' });
+		}
 
-    const element = createElement(CustomElement, { tag: "strong" });
+		const element = createElement(CustomElement, { tag: 'strong' });
 
-    body.appendChild(element);
-    expect(body.innerHTML).toEqual("<strong>custom</strong>");
-  });
+		body.appendChild(element);
+		expect(body.innerHTML).toEqual('<strong>custom</strong>');
+	});
 
-  it.skip("create a div element that changes the text child on click", () => {
-    const [greet, setGreet] = signal("Hello World!");
-    const onClick = () => setGreet("Ciao Mondo!");
+	it.skip('create a div element that changes the text child on click', () => {
+		const [greet, setGreet] = signal('Hello World!');
+		const onClick = () => setGreet('Ciao Mondo!');
 
-    const element = createElement("div", { onClick, children: greet });
-    body.appendChild(element);
+		const element = createElement('div', { onClick, children: greet });
+		body.appendChild(element);
 
-    expect(body.innerHTML).toEqual(`<div>Hello World!</div>`);
-    body.querySelector("div")?.click();
-    expect(body.innerHTML).toEqual(`<div>Ciao Mondo!</div>`);
-  });
+		expect(body.innerHTML).toEqual(`<div>Hello World!</div>`);
+		body.querySelector('div')?.click();
+		expect(body.innerHTML).toEqual(`<div>Ciao Mondo!</div>`);
+	});
 
-  // TODO
-  //  see: examples/03_greeting/index.js
-  //  run: npm run start:greeting
+	// TODO
+	//  see: examples/03_greeting/index.js
+	//  run: npm run start:greeting
 
-  it.skip("create <a> element with simple properties", () => {
-    const [className, setClassName] = signal("aClass");
-    const [href, setHref] = signal("#aLink");
+	it.skip('create <a> element with simple properties', () => {
+		const [className, setClassName] = signal('aClass');
+		const [href, setHref] = signal('#aLink');
 
-    const element = createElement("a", { href, className });
-    body.appendChild(element);
+		const element = createElement('a', { href, className });
+		body.appendChild(element);
 
-    expect(body.innerHTML).toEqual(`<a href="#aLink" class="aClass"></a>`);
-    setClassName("anotherClass");
-    setHref("#anotherLink");
-    expect(body.innerHTML).toEqual(`<a href="#anotherLink" class="anotherClass"></a>`);
-  });
+		expect(body.innerHTML).toEqual(`<a href="#aLink" class="aClass"></a>`);
+		setClassName('anotherClass');
+		setHref('#anotherLink');
+		expect(body.innerHTML).toEqual(
+			`<a href="#anotherLink" class="anotherClass"></a>`,
+		);
+	});
 
-  // TODO: implement the JSX transformation
-  //  see: dom.test.jsx
+	// TODO: implement the JSX transformation
+	//  see: dom.test.jsx
 });
